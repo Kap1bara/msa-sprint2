@@ -52,8 +52,73 @@ services:
     networks:
       - hotelio-net
 
+  booking-db:
+    image: postgres:15
+    container_name: booking-db
+    environment:
+      POSTGRES_DB: booking
+      POSTGRES_USER: booking
+      POSTGRES_PASSWORD: booking
+    volumes:
+      - booking-db-data:/var/lib/postgresql/data
+    networks:
+      - hotelio-net
+
+  booking-service:
+    build:
+      context: ../../booking-service
+    container_name: booking-service
+    environment:
+      BOOKING_DB_HOST: booking-db
+      BOOKING_DB_PORT: 5432
+      BOOKING_DB_NAME: booking
+      BOOKING_DB_USER: booking
+      BOOKING_DB_PASSWORD: booking
+      BOOKING_GRPC_PORT: 9090
+    depends_on:
+      - booking-db
+    ports:
+      - "9090:9090"
+    networks:
+      - hotelio-net
+
+  history-db:
+    image: postgres:15
+    container_name: history-db
+    environment:
+      POSTGRES_DB: history
+      POSTGRES_USER: history
+      POSTGRES_PASSWORD: history
+    volumes:
+      - history-db-data:/var/lib/postgresql/data
+    networks:
+      - hotelio-net
+
+  booking-history-service:
+    build:
+      context: ../../booking-history-service
+    container_name: booking-history-service
+    environment:
+      HISTORY_DB_HOST: history-db
+      HISTORY_DB_PORT: 5432
+      HISTORY_DB_NAME: history
+      HISTORY_DB_USER: history
+      HISTORY_DB_PASSWORD: history
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      BOOKING_EVENTS_TOPIC: booking-events
+      HISTORY_HTTP_PORT: 8086
+    depends_on:
+      - history-db
+      - kafka
+    ports:
+      - "8086:8086"
+    networks:
+      - hotelio-net
+
 volumes:
   monolith-db-data:
+  booking-db-data:
+  history-db-data:
 
 networks:
   hotelio-net:

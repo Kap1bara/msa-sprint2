@@ -1,0 +1,16 @@
+[+] up 8/8
+ ✔ Image task3-booking-subgraph         Built                                                                                    0.9s
+ ✔ Image task3-hotel-subgraph           Built                                                                                    0.9s
+ ✔ Image task3-promocode-subgraph       Built                                                                                    0.9s
+ ✔ Image task3-apollo-gateway           Built                                                                                    0.9s
+ ✔ Container task3-booking-subgraph-1   Recreated                                                                                0.2s
+ ✔ Container task3-hotel-subgraph-1     Recreated                                                                                0.2s
+ ✔ Container task3-promocode-subgraph-1 Recreated                                                                                0.2s
+ ✔ Container task3-apollo-gateway-1     Recreated                                                                                0.2s
+Attaching to apollo-gateway-1, booking-subgraph-1, hotel-subgraph-1, promocode-subgraph-1
+promocode-subgraph-1  | Enabling inline tracing for this subgraph. To disable, use ApolloServerPluginInlineTraceDisabled.
+hotel-subgraph-1      | Enabling inline tracing for this subgraph. To disable, use ApolloServerPluginInlineTraceDisabled.
+promocode-subgraph-1  | promocode-subgraph ready at http://localhost:4003/
+booking-subgraph-1    | Enabling inline tracing for this subgraph. To disable, use ApolloServerPluginInlineTraceDisabled.
+booking-subgraph-1    | ✅ Booking subgraph ready at http://localhost:4001/
+apollo-gateway-1      | 🚀 Gateway ready at http://localhost:4000/

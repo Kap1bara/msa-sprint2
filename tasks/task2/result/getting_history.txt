@@ -1,0 +1,107 @@
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/test$ curl -s "http://localhost:8086/history?limit=20" | jq .
+[
+  {
+    "id": 1,
+    "eventType": "BOOKING_CREATED",
+    "eventVersion": 0,
+    "bookingId": "37",
+    "userId": "test-user-2",
+    "hotelId": "test-hotel-1",
+    "promoCode": "TESTCODE1",
+    "discountPercent": 0.0,
+    "price": 100.0,
+    "createdAt": "2026-02-28T02:24:19.432989Z",
+    "receivedAt": "2026-02-28T02:39:12.435604Z"
+  },
+  {
+    "id": 2,
+    "eventType": "BOOKING_CREATED",
+    "eventVersion": 0,
+    "bookingId": "38",
+    "userId": "test-user-3",
+    "hotelId": "test-hotel-1",
+    "promoCode": null,
+    "discountPercent": 0.0,
+    "price": 80.0,
+    "createdAt": "2026-02-28T02:24:19.760752Z",
+    "receivedAt": "2026-02-28T02:39:12.473594Z"
+  },
+  {
+    "id": 3,
+    "eventType": "BOOKING_CREATED",
+    "eventVersion": 0,
+    "bookingId": "39",
+    "userId": "test-user-3",
+    "hotelId": "test-hotel-1",
+    "promoCode": null,
+    "discountPercent": 0.0,
+    "price": 80.0,
+    "createdAt": "2026-02-28T02:24:20.112248Z",
+    "receivedAt": "2026-02-28T02:39:12.476420Z"
+  },
+  {
+    "id": 4,
+    "eventType": "BOOKING_CREATED",
+    "eventVersion": 0,
+    "bookingId": "40",
+    "userId": "test-user-2",
+    "hotelId": "test-hotel-1",
+    "promoCode": "TESTCODE1",
+    "discountPercent": 0.0,
+    "price": 100.0,
+    "createdAt": "2026-02-28T02:24:20.163761Z",
+    "receivedAt": "2026-02-28T02:39:12.478727Z"
+  },
+  {
+    "id": 5,
+    "eventType": "BOOKING_CREATED",
+    "eventVersion": 0,
+    "bookingId": "41",
+    "userId": "test-user-2",
+    "hotelId": "test-hotel-1",
+    "promoCode": "TESTCODE1",
+    "discountPercent": 0.0,
+    "price": 100.0,
+    "createdAt": "2026-02-28T02:39:35.807743Z",
+    "receivedAt": "2026-02-28T02:39:36.132729Z"
+  },
+  {
+    "id": 6,
+    "eventType": "BOOKING_CREATED",
+    "eventVersion": 0,
+    "bookingId": "42",
+    "userId": "test-user-3",
+    "hotelId": "test-hotel-1",
+    "promoCode": null,
+    "discountPercent": 0.0,
+    "price": 80.0,
+    "createdAt": "2026-02-28T02:39:36.179228Z",
+    "receivedAt": "2026-02-28T02:39:36.185610Z"
+  },
+  {
+    "id": 7,
+    "eventType": "BOOKING_CREATED",
+    "eventVersion": 0,
+    "bookingId": "43",
+    "userId": "test-user-3",
+    "hotelId": "test-hotel-1",
+    "promoCode": null,
+    "discountPercent": 0.0,
+    "price": 80.0,
+    "createdAt": "2026-02-28T02:39:36.564230Z",
+    "receivedAt": "2026-02-28T02:39:36.572599Z"
+  },
+  {
+    "id": 8,
+    "eventType": "BOOKING_CREATED",
+    "eventVersion": 0,
+    "bookingId": "44",
+    "userId": "test-user-2",
+    "hotelId": "test-hotel-1",
+    "promoCode": "TESTCODE1",
+    "discountPercent": 0.0,
+    "price": 100.0,
+    "createdAt": "2026-02-28T02:39:36.618739Z",
+    "receivedAt": "2026-02-28T02:39:36.626498Z"
+  }
+]

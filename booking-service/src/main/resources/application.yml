@@ -1,0 +1,25 @@
+
+monolith:
+  baseUrl: ${MONOLITH_BASE_URL:http://monolith:8080}
+spring:
+  datasource:
+    url: jdbc:postgresql://${BOOKING_DB_HOST:booking-db}:${BOOKING_DB_PORT:5432}/${BOOKING_DB_NAME:booking}
+    username: ${BOOKING_DB_USER:booking}
+    password: ${BOOKING_DB_PASSWORD:booking}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+booking:
+  grpc:
+    port: ${BOOKING_GRPC_PORT:9090}
+  kafka:
+    topic: ${BOOKING_EVENTS_TOPIC:booking-events}

@@ -1,0 +1,26 @@
+replicaCount: 1
+
+image:
+  name: booking-service
+  tag: staging
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+# Staging: feature disabled by default
+ENABLE_FEATURE_X: "false"
+
+env:
+  - name: LOG_LEVEL
+    value: "debug"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi

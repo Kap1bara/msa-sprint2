@@ -1,0 +1,13 @@
+{
+  "name": "promocode-subgraph",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@apollo/server": "^4.10.5",
+    "@apollo/subgraph": "^2.7.9",
+    "graphql": "^16.8.1",
+    "graphql-tag": "^2.12.6",
+    "@grpc/grpc-js": "^1.10.8",
+    "@grpc/proto-loader": "^0.7.13"
+  }
+}

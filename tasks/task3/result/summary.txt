@@ -1,0 +1,24 @@
+Собрали federated GraphQL API (Apollo Federation) для “личного кабинета” с агрегацией данных из доменов booking, hotel и promocode, добавили ACL и устранили N+1 при загрузке отелей
+
+booking-subgraph
+- booking.proto grpc интеграция
+- ACL
+- userBookings(userId: ID!) на месте TODO
+- Добавили federated связь Booking.hotel -> Hotel через reference (__typename: "Hotel", id: hotelId).
+
+hotel-subgraph
+- загрузка через внешний rest
+- Dataloader для батчинга и кеширования
+- в итоге решили N+1
+
+
+promocode-subgraph
+-Реализовали логику:
+
+    Booking.discountPercent переопределяется через @override(from: "booking-subgraph")
+
+    Booking.discountInfo вычисляется из promoCode и discountPercentBase
+    Для этого в том числе добавлен discountPercentBase в booking-subgraph как “снимок” исходного значения
+
+Gateway 
+обновили и перевели на IntrospectAndCompose

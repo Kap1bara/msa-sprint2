@@ -1,0 +1,106 @@
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task1$ docker network list
+NETWORK ID     NAME          DRIVER    SCOPE
+217dc6017e42   bridge        bridge    local
+e67965cbc0bd   host          host      local
+ccd1e528c6ab   hotelio-net   bridge    local
+e92feb77aa93   none          null      local
+
+
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task1$ docker compose up -d --build
+WARN[0000] /home/murin/workspace/y.practicum/msa-sprint2/tasks/task1/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+[+] Building 0.8s (10/10) FINISHED                                                                                                   
+ => [internal] load local bake definitions                                                                                      0.0s
+ => => reading from stdin 576B                                                                                                  0.0s
+ => [internal] load build definition from Dockerfile                                                                            0.0s
+ => => transferring dockerfile: 175B                                                                                            0.0s
+ => [internal] load metadata for docker.io/library/eclipse-temurin:17-jdk-jammy                                                 0.7s
+ => [internal] load .dockerignore                                                                                               0.0s
+ => => transferring context: 2B                                                                                                 0.0s
+ => [1/3] FROM docker.io/library/eclipse-temurin:17-jdk-jammy@sha256:ce06e86f8d5adea5e0e0f68c63f322dc1cbbbcd3c2875ff8241b39a57  0.0s
+ => => resolve docker.io/library/eclipse-temurin:17-jdk-jammy@sha256:ce06e86f8d5adea5e0e0f68c63f322dc1cbbbcd3c2875ff8241b39a57  0.0s
+ => [internal] load build context                                                                                               0.0s
+ => => transferring context: 50B                                                                                                0.0s
+ => CACHED [2/3] WORKDIR /app                                                                                                   0.0s
+ => CACHED [3/3] COPY hotelio-monolith-1.0.0.jar app.jar                                                                        0.0s
+ => exporting to image                                                                                                          0.0s
+ => => exporting layers                                                                                                         0.0s
+ => => exporting manifest sha256:38a4d30e72f7346710b0271befcce80c524417b478a487a37335a3e547b62374                               0.0s
+ => => exporting config sha256:415e15b579fb192d9be3083090882bf64803ba48a9291a95eee629a149d14b24                                 0.0s
+ => => exporting attestation manifest sha256:2c5acaaa798af1c6dc1f2f7e6b7ccec8558e7600958a6a0f1abaa3c8dedd4678                   0.0s
+ => => exporting manifest list sha256:4c0b275b00f05f6f9740245e785beee538c85048f9eb62bf005582f18188a1b4                          0.0s
+ => => naming to docker.io/library/task1-monolith:latest                                                                        0.0s
+ => => unpacking to docker.io/library/task1-monolith:latest                                                                     0.0s
+ => resolving provenance for metadata file                                                                                      0.0s
+[+] up 4/4
+ ✔ Image task1-monolith          Built                                                                                           0.8s
+ ✔ Volume task1_monolith-db-data Created                                                                                         0.0s
+ ✔ Container hotelio-monolith    Created                                                                                         0.0s
+ ✔ Container hotelio-db          Created                                                                                         0.0s
+ 
+
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task1$ docker compose ps
+WARN[0000] /home/murin/workspace/y.practicum/msa-sprint2/tasks/task1/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+NAME               IMAGE            COMMAND                  SERVICE       CREATED              STATUS              PORTS
+hotelio-db         postgres:15      "docker-entrypoint.s…"   monolith-db   About a minute ago   Up About a minute   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
+hotelio-monolith   task1-monolith   "java -jar app.jar"      monolith      About a minute ago   Up About a minute   0.0.0.0:8084->8080/tcp, [::]:8084->8080/tcp
+
+# regression
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/test$ docker run --rm --network hotelio-net  -e DB_HOST=hotelio-db   -e DB_PORT=5432   -e DB_NAME=hotelio   -e DB_USER=hotelio   -e DB_PASSWORD=hotelio   -e API_URL=http://hotelio-monolith:8080   hotelio-tester
+🏁 Регрессионный тест до миграции Hotelio
+🧪 Проверка подключения к БД...
+🧪 Загрузка фикстур...
+DELETE 0
+DELETE 0
+DELETE 0
+DELETE 0
+DELETE 0
+INSERT 0 4
+INSERT 0 3
+INSERT 0 12
+INSERT 0 3
+INSERT 0 2
+🧪 Выполнение HTTP-тестов...
+
+Тесты пользователей...
+✅ Получение test-user-1 по ID работает
+✅ Статус test-user-1: ACTIVE
+✅ test-user-1 в блэклисте
+✅ test-user-1 активен
+✅ test-user-1 не авторизован (в блэклисте)
+✅ test-user-3 — VIP-пользователь
+✅ test-user-2 авторизован
+
+Тесты отелей...
+✅ test-hotel-1 получен по ID
+✅ test-hotel-1 работает
+✅ test-hotel-3 не работает
+✅ test-hotel-2 полностью забронирован
+✅ Поиск отелей в Сеуле работает
+✅ Топ-отели в Сеуле загружены
+
+Тесты ревью...
+✅ Отзывы test-hotel-1 найдены
+✅ test-hotel-1 признан надёжным
+✅ test-hotel-3 НЕ признан надёжным (ожидаемо)
+
+Тесты промокодов...
+✅ Промокод TESTCODE1 найден
+✅ VIP-промо доступен VIP
+✅ VIP-промо недоступен обычному
+✅ Обычный промо доступен
+✅ Истекший промо недоступен
+✅ POST /validate промо прошёл
+
+Тесты бронирования...
+✅ Все бронирования получены
+✅ Бронирования test-user-2 найдены
+✅ Бронирование прошло (без промо)
+✅ Бронирование с промо прошло
+✅ Отклонено: неактивный пользователь
+✅ Отклонено: недоверенный отель
+✅ Отклонено: отель полностью забронирован
+✅ Все HTTP-тесты пройдены!
+
+# Дернем api/bookings
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/test$ curl localhost:8084/api/bookings
+[{"id":1,"userId":"test-user-2","hotelId":"test-hotel-1","promoCode":"TESTCODE1","discountPercent":10.0,"price":90.0,"createdAt":"2026-02-26T20:13:17.182917Z"},{"id":2,"userId":"test-user-3","hotelId":"test-hotel-1","promoCode":null,"discountPercent":0.0,"price":80.0,"createdAt":"2026-02-26T20:13:17.182917Z"},{"id":3,"userId":"test-user-3","hotelId":"test-hotel-1","promoCode":null,"discountPercent":0.0,"price":80.0,"createdAt":null},{"id":4,"userId":"test-user-2","hotelId":"test-hotel-1","promoCode":"TESTCODE1","discountPercent":10.0,"price":90.0,"createdAt":null}]

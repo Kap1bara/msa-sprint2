@@ -1,0 +1,61 @@
+✔ Istio core installed ⛵️                                                                                                            
+✔ Istiod installed 🧠                                                                                                                
+✔ Egress gateways installed 🛫                                                                                                       
+✔ Ingress gateways installed 🛬                                                                                                      
+✔ Installation complete                                                                                                              
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task5$ kubectl label namespace default istio-injection=enabled --overwrite
+namespace/default labeled
+
+
+
+# after rerolling with v1v2
+murin@nb-00024367-1:~$ kubectl get pods -l app=booking-service --show-labels
+NAME                                  READY   STATUS    RESTARTS   AGE   LABELS
+booking-service-v1-64c8bd49c8-578tq   2/2     Running   0          40s   app=booking-service,pod-template-hash=64c8bd49c8,security.istio.io/tlsMode=istio,service.istio.io/canonical-name=booking-service,service.istio.io/canonical-revision=v1,version=v1
+booking-service-v1-64c8bd49c8-bg4hd   2/2     Running   0          40s   app=booking-service,pod-template-hash=64c8bd49c8,security.istio.io/tlsMode=istio,service.istio.io/canonical-name=booking-service,service.istio.io/canonical-revision=v1,version=v1
+booking-service-v1-64c8bd49c8-kt6rs   2/2     Running   0          40s   app=booking-service,pod-template-hash=64c8bd49c8,security.istio.io/tlsMode=istio,service.istio.io/canonical-name=booking-service,service.istio.io/canonical-revision=v1,version=v1
+booking-service-v2-5496c9bc68-667th   2/2     Running   0          40s   app=booking-service,pod-template-hash=5496c9bc68,security.istio.io/tlsMode=istio,service.istio.io/canonical-name=booking-service,service.istio.io/canonical-revision=v2,version=v2
+
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task5$ bash check-istio.sh
+▶️ Проверка установки Istio...
+NAME                                   READY   STATUS    RESTARTS   AGE
+istio-egressgateway-74b45df455-sl9pm   1/1     Running   0          11m
+istio-ingressgateway-f547fc59c-znxh7   1/1     Running   0          11m
+istiod-f75584cf4-tsqvc                 1/1     Running   0          11m
+▶️ Проверка Istio инъекции в default namespace...
+"enabled"
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task5$ 
+
+
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task5$ bash check-canary.sh 
+▶️ Checking canary release (90% v1, 10% v2)...
+      1 pod "canary-test" deleted
+     91 pong version=v1
+      9 pong version=v2
+v1=91 v2=9
+✅ Canary looks OK
+
+
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task5$ bash check-fallback.sh
+▶️ Testing fallback route...
+pong version=v1
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task5$ kubectl scale deploy/booking-service-v1 --replicakubectl scale deploy/booking-service-v1 --replicas=0
+deployment.apps/booking-service-v1 scaled
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task5$ bash check-fallback.sh
+▶️ Testing fallback route...
+Fallback route working
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task5$ 
+
+#lets use cananry for test: everything shall go to v2
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task5$ bash check-canary.sh 
+▶️ Checking canary release (90% v1, 10% v2)...
+     91 no healthy upstream
+      1 pod "canary-test" deleted
+      9 pong version=v2
+v1=0 v2=9
+❌ Canary split is not OK
+
+#envoy-filter: enable port-forwarding before
+murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task5$ bash check-feature-flag.sh 
+▶️ Проверка Feature Flag (X-Feature-Enabled: true)...
+pong version=v2murin@nb-00024367-1:~/workspace/y.practicum/msa-sprint2/tasks/task5$ 

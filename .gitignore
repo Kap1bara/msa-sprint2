@@ -1,0 +1,4 @@
+*.class
+**/bin
+**/.gradle
+**/istio-1.29**
